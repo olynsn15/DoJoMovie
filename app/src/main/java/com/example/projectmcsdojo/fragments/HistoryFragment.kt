@@ -14,7 +14,6 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.projectmcsdojo.R
 import com.example.projectmcsdojo.adapters.HistoryListAdapter
-import com.example.projectmcsdojo.adapters.MovieListAdapter
 import com.example.projectmcsdojo.util.DB
 
 class HistoryFragment : Fragment() {

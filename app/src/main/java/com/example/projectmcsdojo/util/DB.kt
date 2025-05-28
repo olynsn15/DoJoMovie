@@ -1,11 +1,9 @@
 package com.example.projectmcsdojo.util
 
 import android.content.Context
+import com.example.projectmcsdojo.models.Film
 import com.example.projectmcsdojo.models.History
-import com.example.projectmcsdojo.models.Movie
 import com.example.projectmcsdojo.models.User
-import java.text.SimpleDateFormat
-import java.util.Date
 
 class DB {
     //VARIABLE STATIC GLOBAL
@@ -25,11 +23,11 @@ class DB {
             userList.clear()
 
             while (cursor.moveToNext()) {
-                var id = cursor.getInt(0)
-                var phonenumber = cursor.getString(1)
+                var user_id = cursor.getInt(0)
+                var phone_number = cursor.getString(1)
                 var password = cursor.getString(2)
 
-                var temp = User(id, phonenumber, password)
+                var temp = User(user_id, phone_number, password)
                 userList.add(temp)
             }
 
@@ -38,66 +36,73 @@ class DB {
             HAS_SYNC_USER = true
         }
 
+        fun isPhoneRegistered(ctx: Context, phone: String): Boolean {
+            val helper = Helper(ctx)
+            val db = helper.readableDatabase
+            val cursor = db.rawQuery("SELECT * FROM user WHERE phone_number = ?", arrayOf(phone))
+            val exists = cursor.moveToFirst()
+            cursor.close()
+            return exists
+        }
+
+
         //Insert data - User
-        fun insertNewUser(ctx: Context, phonenumber: String, password: String) {
+        fun insertNewUser(ctx: Context, phone_number: String, password: String) {
             var id = 1
-            if(userList.size > 0) {
-                userList.last().user_id + 1
+            if (userList.isNotEmpty()) {
+                id = userList.last().user_id + 1
             }
 
-            //generate ID
-            var temp = User(id, phonenumber, password)
+            val temp = User(id, phone_number, password)
             userList.add(temp)
 
-            //insert in SQLite
-            var helper = Helper(ctx)
-            var db = helper.writableDatabase
+            val helper = Helper(ctx)
+            val db = helper.writableDatabase
             db.execSQL(
-                "INSERT INTO user(phonenumber, password) " +
-                        "VALUES" +
-                        "('"+phonenumber+"', '"+password+"')"
+                "INSERT INTO user(phone_number, password) VALUES('$phone_number', '$password')"
             )
         }
 
+
         var LOGGED_IN_USER: User? = null
-        fun login(phonenumber: String, password: String) {
+        fun login(phone_number: String, password: String) {
             for (user in userList) {
-                if(user.phonenumber == phonenumber && user.password == password) {
+                if(user.phone_number == phone_number && user.password == password) {
                     LOGGED_IN_USER = user
                 }
             }
         }
 
-        var movieList = mutableListOf<Movie>()
+        var filmList = mutableListOf<Film>()
 
-        var HAS_SYNC_MOVIES = false
+        var HAS_SYNC_FILMS = false
 
-        fun syncMovies(ctx: Context) {
-            if(HAS_SYNC_MOVIES) return
+        fun syncFilms(ctx: Context) {
+            if(HAS_SYNC_FILMS) return
 
             val helper = Helper(ctx)
             val db = helper.readableDatabase
-            val cursor = db.rawQuery("SELECT * FROM movie", null)
-            movieList.clear()
+            val cursor = db.rawQuery("SELECT * FROM film", null)
+            filmList.clear()
             while (cursor.moveToNext()) {
-                val id = cursor.getString(0)
-                val title = cursor.getString(1)
-                val image = cursor.getString(2)
-                val price = cursor.getInt(3)
-                movieList.add(Movie(id, title, image, price))
+                val film_id = cursor.getString(0)
+                val film_title = cursor.getString(1)
+                val film_image = cursor.getString(2)
+                val film_price = cursor.getInt(3)
+                filmList.add(Film(film_id, film_title, film_image, film_price))
             }
             cursor.close()
         }
 
-        fun insertMovie(ctx: Context, id: String, title: String, image: String, price: Int) {
-            val actualImage = getImageURL(id)
+        fun insertFilms(ctx: Context, film_id: String, film_title: String, film_image: String, film_price: Int) {
+            val actual_film_image = getImageURL(film_id)
             val helper = Helper(ctx)
             val db = helper.writableDatabase
-            db.execSQL("INSERT OR REPLACE INTO movie(id, title, image, price) VALUES('$id', '$title', '$actualImage', $price)")
+            db.execSQL("INSERT OR REPLACE INTO film(film_id, film_title, film_image, film_price) VALUES('$film_id', '$film_title', '$actual_film_image', $film_price)")
         }
 
-        fun getImageURL(movieID: String): String {
-            return when (movieID) {
+        fun getImageURL(film_id: String): String {
+            return when (film_id) {
                 "MV001" -> "https://play-lh.googleusercontent.com/nQctOI_jJ9MoTPQmv4SaB6OUg8xwgEpYQT6Gfp2Qk_6wkTPudkXLRCGOh92zB-VbM6_NDdJJg0Qxbf0_DA=w240-h480-rw"
                 "MV002" -> "https://cdn11.bigcommerce.com/s-6rs11v9w2d/images/stencil/270x360/products/3054/16401/FFVII_RB_AG_US__55522.1709208257.jpg?c=1"
                 "MV003" -> "https://images-cdn.ubuy.co.id/6481a5a5b4dd7038984386a6-no-time-to-die-movie-poster-james.jpg"
@@ -105,27 +110,27 @@ class DB {
             }
         }
 
-        fun getMovieById(ctx: Context, movieId: String): Movie? {
-            syncMovies(ctx)  // Make sure movieList is up to date
-            return movieList.find { it.id == movieId }
+        fun getFilmById(ctx: Context, film_id: String): Film? {
+            syncFilms(ctx)  // Make sure movieList is up to date
+            return filmList.find { it.film_id == film_id }
         }
 
-        fun insertTransaction(ctx: Context, userId: Int, filmId: String, quantity: Int) {
+        fun insertTransaction(ctx: Context, user_id: Int, film_id: String, quantity: Int) {
             val helper = Helper(ctx)
             val db = helper.writableDatabase
-            db.execSQL("INSERT INTO transactions(user_id, film_id, quantity) VALUES($userId, '$filmId', $quantity)")
+            db.execSQL("INSERT INTO transactions(user_id, film_id, quantity) VALUES($user_id, '$film_id', $quantity)")
         }
 
-        fun getTransactionHistoryForUser(ctx: Context, userId: Int): MutableList<History> {
+        fun getTransactionHistoryForUser(ctx: Context, user_id: Int): MutableList<History> {
             val helper = Helper(ctx) // or pass context param if needed
             val db = helper.readableDatabase
-            val cursor = db.rawQuery("SELECT film_id, quantity FROM transactions WHERE user_id = ?", arrayOf(userId.toString()))
+            val cursor = db.rawQuery("SELECT film_id, quantity FROM transactions WHERE user_id = ?", arrayOf(user_id.toString()))
 
             val historyList = mutableListOf<History>()
             while (cursor.moveToNext()) {
-                val filmId = cursor.getString(0)
+                val film_id = cursor.getString(0)
                 val quantity = cursor.getInt(1)
-                historyList.add(History(filmId, quantity))
+                historyList.add(History(film_id, quantity))
             }
             cursor.close()
             return historyList

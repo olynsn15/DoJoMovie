@@ -57,10 +57,16 @@
             app:cardPreventCornerOverlap="false"
             app:cardUseCompatPadding="true">
 
-            <org.osmdroid.views.MapView
-                android:id="@+id/mapView"
+<!--            <org.osmdroid.views.MapView-->
+<!--                android:id="@+id/mapView"-->
+<!--                android:layout_width="match_parent"-->
+<!--                android:layout_height="match_parent" />-->
+
+            <fragment
+                android:id="@+id/map"
+                android:name="com.google.android.gms.maps.SupportMapFragment"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent" />
+                android:layout_height="match_parent"/>
         </androidx.cardview.widget.CardView>
 
         <TextView
@@ -74,10 +80,10 @@
             android:layout_marginTop="40dp"/>
 
         <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/rvMovieList"
+            android:id="@+id/rvFilmList"
             android:layout_marginTop="10dp"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content" tools:listitem="@layout/list_item_movie"/>
+            android:layout_height="wrap_content" tools:listitem="@layout/list_item_film"/>
     </LinearLayout>
     </ScrollView>
 

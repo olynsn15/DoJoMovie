@@ -1,6 +1,6 @@
 package com.example.projectmcsdojo.models
 
 data class History(
-    val filmId: String,
+    val film_id: String,
     val quantity: Int
 )

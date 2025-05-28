@@ -2,78 +2,87 @@ package com.example.projectmcsdojo.fragments
 
 import android.content.Context
 import android.os.Bundle
-import android.preference.PreferenceManager
 import android.text.Spannable
 import android.text.SpannableString
 import android.text.style.ForegroundColorSpan
 import android.text.style.UnderlineSpan
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
-import android.widget.TextView
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
 import com.android.volley.toolbox.JsonArrayRequest
 import com.android.volley.toolbox.Volley
 import com.example.projectmcsdojo.R
-import com.example.projectmcsdojo.adapters.MovieListAdapter
+import com.example.projectmcsdojo.adapters.FilmListAdapter
+import com.example.projectmcsdojo.databinding.FragmentHomeBinding
 import com.example.projectmcsdojo.util.DB
-import org.osmdroid.config.Configuration
-import org.osmdroid.tileprovider.tilesource.TileSourceFactory
-import org.osmdroid.util.GeoPoint
-import org.osmdroid.views.MapView
-import org.osmdroid.views.overlay.Marker
+import com.google.android.gms.maps.CameraUpdateFactory
+import com.google.android.gms.maps.GoogleMap
+import com.google.android.gms.maps.OnMapReadyCallback
+import com.google.android.gms.maps.SupportMapFragment
+import com.google.android.gms.maps.model.LatLng
+import com.google.android.gms.maps.model.MarkerOptions
 
-class HomeFragment : Fragment(){
+class HomeFragment : Fragment(), OnMapReadyCallback {
 
-    private lateinit var rvMovieList: RecyclerView
-    private lateinit var movieAdapter: MovieListAdapter
+    private var _binding: FragmentHomeBinding? = null
+    private val binding get() = _binding!!
 
-    private var mapView:MapView? = null
+    private lateinit var mMap: GoogleMap
+    private lateinit var filmAdapter: FilmListAdapter
 
     override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
+        inflater: android.view.LayoutInflater, container: android.view.ViewGroup?,
         savedInstanceState: Bundle?
-    ): View {
-        Configuration.getInstance().load(
-            requireContext(), PreferenceManager.getDefaultSharedPreferences(requireContext())
-        )
-        Configuration.getInstance().userAgentValue = requireContext().packageName
+    ): android.view.View {
+        _binding = FragmentHomeBinding.inflate(inflater, container, false)
+        val view = binding.root
 
-        val view = inflater.inflate(R.layout.fragment_home, container, false)
-
-        val tvLocation = view.findViewById<TextView>(R.id.tvLocation)
+        // Styled "Location" text
         val textLO = "Location"
         val spannableLO = SpannableString(textLO)
         spannableLO.setSpan(UnderlineSpan(), 0, spannableLO.length, 0)
-        tvLocation.text = spannableLO
+        binding.tvLocation.text = spannableLO
 
-        val tvAvailableFilms = view.findViewById<TextView>(R.id.tvAvailableFilms)
+        // Styled "Available Films."
         val textAF = "Available Films."
         val yellowColor = ContextCompat.getColor(requireContext(), R.color.yellow)
         val spannableAF = SpannableString(textAF)
-        spannableAF.setSpan(ForegroundColorSpan(yellowColor), textAF.length - 1, textAF.length, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE)
-        tvAvailableFilms.text = spannableAF
+        spannableAF.setSpan(
+            ForegroundColorSpan(yellowColor),
+            textAF.length - 1,
+            textAF.length,
+            Spannable.SPAN_EXCLUSIVE_EXCLUSIVE
+        )
+        binding.tvAvailableFilms.text = spannableAF
 
-        mapView = view.findViewById(R.id.mapView)
-        createMap()
+        // RecyclerView setup
+        filmAdapter = FilmListAdapter(mutableListOf(), requireContext())
+        binding.rvFilmList.layoutManager = LinearLayoutManager(requireContext())
+        binding.rvFilmList.adapter = filmAdapter
 
-        rvMovieList = view.findViewById(R.id.rvMovieList)
-        rvMovieList.layoutManager = LinearLayoutManager(requireContext())
-        movieAdapter = MovieListAdapter(mutableListOf(), requireContext())
-        rvMovieList.adapter = movieAdapter
-
-        fetchMoviesFromAPI(requireContext()) {
-            DB.syncMovies(requireContext())
-            movieAdapter.updateMovies(DB.movieList)
+        // Load movie data from API
+        val safeContext = requireContext() // Ambil context yang valid
+        fetchFilmsFromAPI(safeContext) {
+            DB.syncFilms(safeContext)
+            filmAdapter.updateFilms(DB.filmList)
         }
+
+
+        // Set up Google Map
+        val mapFragment = childFragmentManager.findFragmentById(R.id.map) as SupportMapFragment
+        mapFragment.getMapAsync(this)
 
         return view
     }
 
-    private fun fetchMoviesFromAPI(context: Context, onComplete: () -> Unit) {
+    override fun onMapReady(googleMap: GoogleMap) {
+        mMap = googleMap
+        val dojo = LatLng(-6.2088, 106.8456)
+        mMap.addMarker(MarkerOptions().position(dojo).title("This is DoJo Movie store"))
+        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(dojo, 15f))
+    }
+
+    private fun fetchFilmsFromAPI(context: Context, onComplete: () -> Unit) {
         val url = "https://api.npoint.io/66cce8acb8f366d2a508"
         val queue = Volley.newRequestQueue(context)
 
@@ -81,11 +90,11 @@ class HomeFragment : Fragment(){
             { response ->
                 for (i in 0 until response.length()) {
                     val obj = response.getJSONObject(i)
-                    val id = obj.getString("id")
-                    val title = obj.getString("title")
-                    val image = obj.getString("image")
-                    val price = obj.getInt("price")
-                    DB.insertMovie(context, id, title, image, price)
+                    val film_id = obj.getString("id")
+                    val film_title = obj.getString("title")
+                    val film_image = obj.getString("image")
+                    val film_price = obj.getInt("price")
+                    DB.insertFilms(context, film_id, film_title, film_image, film_price)
                 }
                 onComplete()
             },
@@ -97,23 +106,8 @@ class HomeFragment : Fragment(){
         queue.add(request)
     }
 
-    private fun createMap() {
-        mapView?.apply {
-            setTileSource(TileSourceFactory.MAPNIK)
-            setMultiTouchControls(true)
-
-            val mapController = controller
-            mapController.setZoom(15.0)
-
-            val jakartaPoint = GeoPoint(-6.2088, 106.8456) // Correct lat-lon
-            mapController.setCenter(jakartaPoint)
-
-            val marker = Marker(this)
-            marker.position = jakartaPoint
-            marker.setAnchor(Marker.ANCHOR_CENTER, Marker.ANCHOR_BOTTOM)
-            marker.title = "DoJo Movie"
-            marker.subDescription = "This is DoJo Movie store"
-            overlays.add(marker)
-        }
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
     }
 }

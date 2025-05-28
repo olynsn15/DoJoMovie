@@ -10,55 +10,55 @@ import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
-import com.example.projectmcsdojo.MovieDetailPage
+import com.example.projectmcsdojo.FilmDetailPage
 import com.example.projectmcsdojo.R
-import com.example.projectmcsdojo.models.Movie
+import com.example.projectmcsdojo.models.Film
 
-class MovieListAdapter(
-    var data: MutableList<Movie>,
+class FilmListAdapter(
+    var data: MutableList<Film>,
     var ctx: Context
-) : RecyclerView.Adapter<MovieListAdapter.MovieListViewHolder>() {
+) : RecyclerView.Adapter<FilmListAdapter.FilmListViewHolder>() {
 
-    fun updateMovies(newMovies: List<Movie>) {
+    fun updateFilms(newFilms: List<Film>) {
         data.clear()
-        data.addAll(newMovies)
+        data.addAll(newFilms)
         notifyDataSetChanged()
     }
 
-    class MovieListViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
+    class FilmListViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         val txtTitle: TextView = itemView.findViewById(R.id.tvTitle)
         val ivPoster: ImageView = itemView.findViewById(R.id.ivPoster)
         val txtPrice: TextView = itemView.findViewById(R.id.tvPrice)
         val btnDetail: Button = itemView.findViewById(R.id.btnDetail)
 
-        fun bind(movie: Movie, ctx: Context) {
-            txtTitle.text = movie.title
-            txtPrice.text = "Rp. ${movie.price}"
+        fun bind(film: Film, ctx: Context) {
+            txtTitle.text = film.film_title
+            txtPrice.text = "Rp. ${film.film_price}"
 
             // Load poster image
             Glide.with(ctx)
-                .load(movie.linkImg)
+                .load(film.film_image)
                 .into(ivPoster)
 
             // Handle detail button click
             btnDetail.setOnClickListener {
-                val intent = Intent(ctx, MovieDetailPage::class.java).apply {
-                    putExtra("movie_id", movie.id)
+                val intent = Intent(ctx, FilmDetailPage::class.java).apply {
+                    putExtra("film_id", film.film_id)
                 }
                 ctx.startActivity(intent)
             }
         }
     }
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MovieListViewHolder {
-        val itemView = LayoutInflater.from(ctx).inflate(R.layout.list_item_movie, parent, false)
-        return MovieListViewHolder(itemView)
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): FilmListViewHolder {
+        val itemView = LayoutInflater.from(ctx).inflate(R.layout.list_item_film, parent, false)
+        return FilmListViewHolder(itemView)
     }
 
     override fun getItemCount(): Int = data.size
 
-    override fun onBindViewHolder(holder: MovieListViewHolder, position: Int) {
-        val movie = data[position]
-        holder.bind(movie, ctx)
+    override fun onBindViewHolder(holder: FilmListViewHolder, position: Int) {
+        val film = data[position]
+        holder.bind(film, ctx)
     }
 }

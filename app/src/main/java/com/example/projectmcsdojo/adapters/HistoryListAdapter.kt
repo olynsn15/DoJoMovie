@@ -1,19 +1,15 @@
 package com.example.projectmcsdojo.adapters
 
 import android.content.Context
-import android.content.Intent
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Button
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
-import com.example.projectmcsdojo.MovieDetailPage
 import com.example.projectmcsdojo.R
 import com.example.projectmcsdojo.models.History
-import com.example.projectmcsdojo.models.Movie
 import com.example.projectmcsdojo.util.DB
 
 class HistoryListAdapter(
@@ -34,19 +30,19 @@ class HistoryListAdapter(
         val txtHistoryQuantity: TextView = itemView.findViewById(R.id.tvHistoryQuantity)
 
         fun bind(history: History, ctx: Context) {
-            val movie = DB.getMovieById(ctx, history.filmId)
+            val film = DB.getFilmById(ctx, history.film_id)
 
-            if (movie != null) {
-                txtHistoryTitle.text = movie.title
-                txtHistoryPrice.text = "Rp. ${movie.price}"
+            if (film != null) {
+                txtHistoryTitle.text = film.film_title
+                txtHistoryPrice.text = "Rp. ${film.film_price}"
                 txtHistoryQuantity.text = "Quantity: ${history.quantity}"
 
                 Glide.with(ctx)
-                    .load(movie.linkImg)
+                    .load(film.film_image)
                     .into(ivHistoryPoster)
             } else {
                 // Movie not found - show placeholders or hide item
-                txtHistoryTitle.text = "Unknown movie"
+                txtHistoryTitle.text = "Unknown film"
                 txtHistoryPrice.text = "-"
                 txtHistoryQuantity.text = "Quantity: ${history.quantity}"
                 ivHistoryPoster.setImageResource(R.drawable.rounded_background)

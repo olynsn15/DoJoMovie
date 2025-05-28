@@ -53,7 +53,7 @@ class ProfileFragment : Fragment() {
 
         phoneNumber = view.findViewById(R.id.tv_phone_number)
 
-        phoneNumber.text = user.phonenumber.toString()
+        phoneNumber.text = user.phone_number.toString()
 
         logout = view.findViewById(R.id.btnLogOut)
 

@@ -15,7 +15,7 @@ import androidx.appcompat.app.AppCompatActivity
 import com.example.projectmcsdojo.util.DB
 
 class RegisterPage : AppCompatActivity() {
-    lateinit var phonenumber: EditText
+    lateinit var phonenumber_text: EditText
     lateinit var password: EditText
     lateinit var passwordconfirm: EditText
     lateinit var btnRegist: Button
@@ -27,7 +27,7 @@ class RegisterPage : AppCompatActivity() {
         enableEdgeToEdge()
         setContentView(R.layout.activity_register_page)
 
-        phonenumber = findViewById(R.id.et_phone)
+        phonenumber_text = findViewById(R.id.et_phone)
         password = findViewById(R.id.et_pwd)
         passwordconfirm = findViewById(R.id.et_pwdconfirm)
         btnRegist = findViewById(R.id.btn_regist)
@@ -35,7 +35,7 @@ class RegisterPage : AppCompatActivity() {
         login = findViewById(R.id.tv_clicklog)
 
         btnRegist.setOnClickListener {
-            if(validateForm(phonenumber, password, passwordconfirm)){
+            if(validateForm(phonenumber_text, password, passwordconfirm)){
                 signUp()
             }
         }
@@ -70,6 +70,10 @@ class RegisterPage : AppCompatActivity() {
             Toast.makeText(this, "Phone number is required", Toast.LENGTH_SHORT).show()
             return false
         }
+        if (DB.isPhoneRegistered(this@RegisterPage, phone)) {
+            Toast.makeText(this, "Phone number already registered", Toast.LENGTH_SHORT).show()
+            return false
+        }
         if(pwd.isEmpty()) {
             Toast.makeText(this, "Password is required", Toast.LENGTH_SHORT).show()
             return false
@@ -87,7 +91,7 @@ class RegisterPage : AppCompatActivity() {
     }
 
     fun signUp() {
-        val phonenumber = phonenumber.text.toString()
+        val phonenumber = phonenumber_text.text.toString()
         val password = password.text.toString()
 
         DB.insertNewUser(this@RegisterPage, phonenumber, password)

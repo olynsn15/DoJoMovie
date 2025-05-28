@@ -11,20 +11,20 @@ import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import com.bumptech.glide.Glide
-import com.example.projectmcsdojo.models.Movie
+import com.example.projectmcsdojo.models.Film
 import com.example.projectmcsdojo.util.DB  // ✅ Assuming DB is your data source
 
-class MovieDetailPage : AppCompatActivity() {
+class FilmDetailPage : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
-        setContentView(R.layout.activity_movie_detail_page)
+        setContentView(R.layout.activity_film_detail_page)
 
         // ✅ Get movie ID
-        val movieId = intent.getStringExtra("movie_id")
-        val movie: Movie? = movieId?.let { DB.getMovieById(this, it) }
+        val filmId = intent.getStringExtra("film_id")
+        val film: Film? = filmId?.let { DB.getFilmById(this, it) }
 
-        if (movie == null) {
+        if (film == null) {
             finish() // If movie not found, close the activity
             return
         }
@@ -39,11 +39,11 @@ class MovieDetailPage : AppCompatActivity() {
         val ivBackButton = findViewById<ImageView>(R.id.ivBackButton)
 
         // ✅ Set movie details
-        tvTitleDetail.text = movie.title
-        tvPriceDetail.text = "Rp. ${movie.price}"
+        tvTitleDetail.text = film.film_title
+        tvPriceDetail.text = "Rp. ${film.film_price}"
 
         Glide.with(this)
-            .load(movie.linkImg)
+            .load(film.film_image)
             .into(ivPosterDetail)
 
         // ✅ Handle quantity change
@@ -52,7 +52,7 @@ class MovieDetailPage : AppCompatActivity() {
 
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
                 val quantity = s.toString().toIntOrNull() ?: 0
-                val totalPrice = quantity * movie.price
+                val totalPrice = quantity * film.film_price
                 tvTotalPriceValue.text = "Rp. $totalPrice"
             }
 
@@ -80,7 +80,7 @@ class MovieDetailPage : AppCompatActivity() {
                 return@setOnClickListener
             }
 
-            val filmId = intent.getStringExtra("movie_id") ?: return@setOnClickListener
+            val filmId = intent.getStringExtra("film_id") ?: return@setOnClickListener
 
             DB.insertTransaction(this, currentUser.user_id, filmId, quantityInt)
 
