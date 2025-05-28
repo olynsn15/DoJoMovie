@@ -1,0 +1,21 @@
+<resources xmlns:tools="http://schemas.android.com/tools">
+    <!-- Custom button style to remove Material3 button tinting -->
+    <style name="ButtonStyleOverride" parent="Widget.MaterialComponents.Button">
+        <item name="backgroundTint">@null</item>
+    </style>
+
+    <!-- Base application theme -->
+    <style name="Base.Theme.ProjectMCSDoJo" parent="Theme.Material3.DayNight.NoActionBar">
+        <item name="buttonStyle">@style/ButtonStyleOverride</item>
+    </style>
+
+    <style name="Widget.BottomNavigationView" parent="Widget.MaterialComponents.BottomNavigationView">
+        <item name="itemActiveIndicatorStyle">@null</item>
+        <item name="iconTint">@null</item>
+        <item name="itemIconTint">@null</item>
+    </style>
+
+
+
+    <style name="Theme.ProjectMCSDoJo" parent="Base.Theme.ProjectMCSDoJo" />
+</resources>
