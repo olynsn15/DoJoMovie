@@ -106,7 +106,6 @@ class RegisterPage : AppCompatActivity() {
 
         DB.insertNewUser(this@RegisterPage, phonenumber, password)
 
-        // TODO: Add sign up logic
         val i = Intent(this@RegisterPage, VerificationPage::class.java)
         i.putExtra("phone_number", phonenumber)
         startActivity(i)
