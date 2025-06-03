@@ -6,9 +6,7 @@ import com.example.projectmcsdojo.models.History
 import com.example.projectmcsdojo.models.User
 
 class DB {
-    //VARIABLE STATIC GLOBAL
     companion object {
-        //jumlahnya sesuai jumlah table yang kita punya
         var userList = mutableListOf<User>()
 
         var HAS_SYNC_USER = false
@@ -16,7 +14,6 @@ class DB {
         fun syncData(ctx: Context) {
             if(HAS_SYNC_USER) return
 
-            //QUERY TABLE
             var helper = Helper(ctx)
             var db = helper.readableDatabase
             var cursor = db.rawQuery("SELECT * FROM user", null)
@@ -45,8 +42,6 @@ class DB {
             return exists
         }
 
-
-        //Insert data - User
         fun insertNewUser(ctx: Context, phone_number: String, password: String) {
             var id = 1
             if (userList.isNotEmpty()) {
@@ -111,7 +106,7 @@ class DB {
         }
 
         fun getFilmById(ctx: Context, film_id: String): Film? {
-            syncFilms(ctx)  // Make sure movieList is up to date
+            syncFilms(ctx)
             return filmList.find { it.film_id == film_id }
         }
 
@@ -122,7 +117,7 @@ class DB {
         }
 
         fun getTransactionHistoryForUser(ctx: Context, user_id: Int): MutableList<History> {
-            val helper = Helper(ctx) // or pass context param if needed
+            val helper = Helper(ctx)
             val db = helper.readableDatabase
             val cursor = db.rawQuery("SELECT film_id, quantity FROM transactions WHERE user_id = ?", arrayOf(user_id.toString()))
 

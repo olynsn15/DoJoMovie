@@ -35,12 +35,10 @@ class FilmListAdapter(
             txtTitle.text = film.film_title
             txtPrice.text = "Rp. ${film.film_price}"
 
-            // Load poster image
             Glide.with(ctx)
                 .load(film.film_image)
                 .into(ivPoster)
 
-            // Handle detail button click
             btnDetail.setOnClickListener {
                 val intent = Intent(ctx, FilmDetailPage::class.java).apply {
                     putExtra("film_id", film.film_id)

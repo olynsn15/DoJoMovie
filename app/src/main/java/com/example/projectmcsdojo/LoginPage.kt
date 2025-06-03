@@ -65,7 +65,6 @@ class LoginPage : AppCompatActivity() {
         )
 
         textView.text = spannable
-
     }
 
     private fun validateForm(phonenumber: EditText, password:EditText): Boolean {
@@ -91,12 +90,12 @@ class LoginPage : AppCompatActivity() {
         DB.syncData(this)
         DB.login(phonenumber, password)
         if(DB.LOGGED_IN_USER == null) {
-            Toast.makeText(this, "Login failed: User not found", Toast.LENGTH_SHORT).show()
-            Log.e("Login", "Failed login: DB.LOGGED_IN_USER is null")
+            Toast.makeText(this, "Login failed! User not found", Toast.LENGTH_SHORT).show()
+            Log.e("Login", "Failed login! DB.LOGGED_IN_USER is null!")
             return
         }
 
-        Toast.makeText(this, "Login success: Welcome!", Toast.LENGTH_SHORT).show()
+        Toast.makeText(this, "Login successful! Welcome to DoJo Movies!", Toast.LENGTH_SHORT).show()
         val i = Intent(this@LoginPage, HomePage::class.java)
         startActivity(i)
         finish()

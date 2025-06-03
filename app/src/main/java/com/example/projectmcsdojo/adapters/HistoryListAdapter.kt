@@ -17,12 +17,6 @@ class HistoryListAdapter(
     var ctx: Context
 ) : RecyclerView.Adapter<HistoryListAdapter.HistoryListViewHolder>() {
 
-//    fun updateMovies(newMovies: List<Movie>) {
-//        data.clear()
-//        data.addAll(newMovies)
-//        notifyDataSetChanged()
-//    }
-
     class HistoryListViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         val txtHistoryTitle: TextView = itemView.findViewById(R.id.tvHistoryTitle)
         val ivHistoryPoster: ImageView = itemView.findViewById(R.id.ivHistoryPoster)
@@ -41,7 +35,6 @@ class HistoryListAdapter(
                     .load(film.film_image)
                     .into(ivHistoryPoster)
             } else {
-                // Movie not found - show placeholders or hide item
                 txtHistoryTitle.text = "Unknown film"
                 txtHistoryPrice.text = "-"
                 txtHistoryQuantity.text = "Quantity: ${history.quantity}"

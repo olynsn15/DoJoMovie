@@ -37,13 +37,11 @@ class HomeFragment : Fragment(), OnMapReadyCallback {
         _binding = FragmentHomeBinding.inflate(inflater, container, false)
         val view = binding.root
 
-        // Styled "Location" text
         val textLO = "Location"
         val spannableLO = SpannableString(textLO)
         spannableLO.setSpan(UnderlineSpan(), 0, spannableLO.length, 0)
         binding.tvLocation.text = spannableLO
 
-        // Styled "Available Films."
         val textAF = "Available Films."
         val yellowColor = ContextCompat.getColor(requireContext(), R.color.yellow)
         val spannableAF = SpannableString(textAF)
@@ -55,20 +53,16 @@ class HomeFragment : Fragment(), OnMapReadyCallback {
         )
         binding.tvAvailableFilms.text = spannableAF
 
-        // RecyclerView setup
         filmAdapter = FilmListAdapter(mutableListOf(), requireContext())
         binding.rvFilmList.layoutManager = LinearLayoutManager(requireContext())
         binding.rvFilmList.adapter = filmAdapter
 
-        // Load movie data from API
-        val safeContext = requireContext() // Ambil context yang valid
+        val safeContext = requireContext()
         fetchFilmsFromAPI(safeContext) {
             DB.syncFilms(safeContext)
             filmAdapter.updateFilms(DB.filmList)
         }
 
-
-        // Set up Google Map
         val mapFragment = childFragmentManager.findFragmentById(R.id.map) as SupportMapFragment
         mapFragment.getMapAsync(this)
 
@@ -78,7 +72,7 @@ class HomeFragment : Fragment(), OnMapReadyCallback {
     override fun onMapReady(googleMap: GoogleMap) {
         mMap = googleMap
         val dojo = LatLng(  -6.2088, 106.8456)
-        mMap.addMarker(MarkerOptions().position(dojo).title("This is DoJo Movie store"))
+        mMap.addMarker(MarkerOptions().position(dojo).title("Here is DoJo Movie store"))
         mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(dojo, 15f))
     }
 

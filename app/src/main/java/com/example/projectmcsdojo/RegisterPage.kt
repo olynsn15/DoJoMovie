@@ -62,9 +62,6 @@ class RegisterPage : AppCompatActivity() {
         )
 
         register.text = spannable
-
-
-
     }
 
     private fun validateForm(phonenumber: EditText, password:EditText, passwordconfirm:EditText): Boolean {

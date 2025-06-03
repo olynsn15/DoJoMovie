@@ -25,7 +25,6 @@
             android:layout_height="match_parent"
             android:background="@drawable/gradient_overlay" />
 
-        <!-- Back Button -->
         <ImageView
             android:id="@+id/ivBackButton"
             android:layout_width="20dp"

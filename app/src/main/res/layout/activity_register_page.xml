@@ -8,7 +8,7 @@
     android:background="@color/black"
     android:orientation="vertical"
     android:padding="50dp"
-    tools:context=".LoginPage">
+    tools:context=".RegisterPage">
 
     <TextView
         android:id="@+id/tv_register"
@@ -19,7 +19,6 @@
         android:text="Register."
         android:textColor="@color/white"
         android:textSize="30dp" />
-
 
     <EditText
         android:id="@+id/et_phone"

@@ -4,7 +4,6 @@ import android.content.Intent
 import android.content.pm.PackageManager
 import android.graphics.Color
 import android.os.Bundle
-import android.os.PersistableBundle
 import android.telephony.SmsManager
 import android.text.Spannable
 import android.text.SpannableString
@@ -16,8 +15,6 @@ import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
-import androidx.core.view.ViewCompat
-import androidx.core.view.WindowInsetsCompat
 import com.example.projectmcsdojo.databinding.ActivityVerificationPageBinding
 
 class VerificationPage : AppCompatActivity() {
@@ -69,7 +66,7 @@ class VerificationPage : AppCompatActivity() {
             val enteredCode = code.text.toString()
 
             if(enteredCode.isEmpty()) {
-                Toast.makeText(this, "please input the OTP code", Toast.LENGTH_SHORT).show()
+                Toast.makeText(this, "Please input the OTP code", Toast.LENGTH_SHORT).show()
             }
             else if (enteredCode == generatedOTP){
                 Toast.makeText(this, "OTP verified!", Toast.LENGTH_SHORT).show()
@@ -85,7 +82,7 @@ class VerificationPage : AppCompatActivity() {
         resend.setOnClickListener {
             if (phoneNumber != null) {
                 generatedOTP = generateOTP()
-                checkSendSMSPermission(phoneNumber!!, "Your new OTP code is: $generatedOTP")
+                checkSendSMSPermission(phoneNumber!!, "Your new OTP code is : $generatedOTP")
                 Toast.makeText(this, "OTP resent!", Toast.LENGTH_SHORT).show()
             }
         }

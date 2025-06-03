@@ -27,7 +27,6 @@ class HistoryFragment : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        // Inflate the fragment layout
         val view = inflater.inflate(R.layout.fragment_history, container, false)
 
         title = view.findViewById(R.id.history_title)
@@ -59,11 +58,9 @@ class HistoryFragment : Fragment() {
     private fun loadHistory() {
         val user = DB.LOGGED_IN_USER
         if (user == null) {
-            // Handle not logged in user if needed
             return
         }
 
-        // Fetch transactions from DB for the logged-in user
         val historyList = DB.getTransactionHistoryForUser(requireContext(), user.user_id)
 
         historyAdapter.data.clear()
