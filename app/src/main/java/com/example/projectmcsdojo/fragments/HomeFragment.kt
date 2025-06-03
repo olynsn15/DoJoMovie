@@ -77,7 +77,7 @@ class HomeFragment : Fragment(), OnMapReadyCallback {
 
     override fun onMapReady(googleMap: GoogleMap) {
         mMap = googleMap
-        val dojo = LatLng(-6.2088, 106.8456)
+        val dojo = LatLng(  -6.2088, 106.8456)
         mMap.addMarker(MarkerOptions().position(dojo).title("This is DoJo Movie store"))
         mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(dojo, 15f))
     }

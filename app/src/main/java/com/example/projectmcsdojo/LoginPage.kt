@@ -13,6 +13,8 @@ import android.widget.TextView
 import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.view.ViewCompat
+import androidx.core.view.WindowInsetsCompat
 import com.example.projectmcsdojo.util.DB
 
 class LoginPage : AppCompatActivity() {
@@ -25,6 +27,11 @@ class LoginPage : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         setContentView(R.layout.activity_login_page)
+        ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main)) { v, insets ->
+            val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
+            v.setPadding(v.paddingLeft, systemBars.top, v.paddingRight, 0)
+            insets
+        }
 
         phonenumber = findViewById(R.id.et_phone)
         password = findViewById(R.id.et_pw)

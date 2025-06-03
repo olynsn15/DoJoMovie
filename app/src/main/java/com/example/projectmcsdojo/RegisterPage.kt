@@ -12,6 +12,8 @@ import android.widget.TextView
 import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.view.ViewCompat
+import androidx.core.view.WindowInsetsCompat
 import com.example.projectmcsdojo.util.DB
 
 class RegisterPage : AppCompatActivity() {
@@ -26,6 +28,11 @@ class RegisterPage : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         setContentView(R.layout.activity_register_page)
+        ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main)) { v, insets ->
+            val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
+            v.setPadding(v.paddingLeft, systemBars.top, v.paddingRight, 0)
+            insets
+        }
 
         phonenumber_text = findViewById(R.id.et_phone)
         password = findViewById(R.id.et_pwd)
@@ -45,7 +52,6 @@ class RegisterPage : AppCompatActivity() {
             startActivity(i)
         }
 
-        val textView = findViewById<TextView>(R.id.tv_register)
         val spannable = SpannableString("Register.")
 
         spannable.setSpan(
@@ -55,7 +61,7 @@ class RegisterPage : AppCompatActivity() {
             Spannable.SPAN_EXCLUSIVE_EXCLUSIVE
         )
 
-        textView.text = spannable
+        register.text = spannable
 
 
 
@@ -76,6 +82,10 @@ class RegisterPage : AppCompatActivity() {
         }
         if(pwd.isEmpty()) {
             Toast.makeText(this, "Password is required", Toast.LENGTH_SHORT).show()
+            return false
+        }
+        if(pwd.length < 8) {
+            Toast.makeText(this, "Password needs to be at least 8 characters", Toast.LENGTH_SHORT).show()
             return false
         }
         if(pwdconfirm.isEmpty()) {

@@ -6,19 +6,19 @@ import android.database.sqlite.SQLiteOpenHelper
 
 class Helper(
     context: Context?,
-) : SQLiteOpenHelper(context, "myDB", null, 9) {
+) : SQLiteOpenHelper(context, "myDB", null, 11) {
 
     var SQL_CREATE_TABLE_USER = "CREATE TABLE IF NOT EXISTS user(" +
             "user_id INTEGER PRIMARY KEY AUTOINCREMENT," +
-            "phone_number TEXT," +
-            "password TEXT)"
+            "phone_number VARCHAR," +
+            "password VARCHAR)"
 
     var SQL_DROP_TABLE_USER = "DROP TABLE IF EXISTS user"
 
     var SQL_CREATE_TABLE_FILM = "CREATE TABLE IF NOT EXISTS film(" +
             "film_id TEXT PRIMARY KEY," +
-            "film_title TEXT," +
-            "film_image TEXT," +
+            "film_title VARCHAR," +
+            "film_image VARCHAR," +
             "film_price INTEGER)"
 
     var SQL_DROP_TABLE_FILM = "DROP TABLE IF EXISTS film"
@@ -26,10 +26,12 @@ class Helper(
     var SQL_CREATE_TABLE_TRANSACTION = "CREATE TABLE IF NOT EXISTS transactions(" +
             "id INTEGER PRIMARY KEY AUTOINCREMENT," +
             "user_id INTEGER," +
-            "film_id TEXT," +
+            "film_id VARCHAR," +
             "quantity INTEGER)"
 
     var SQL_DROP_TABLE_TRANSACTION = "DROP TABLE IF EXISTS transactions"
+
+    var SQL_DROP_TABLE_MOVIE_OLD = "DROP TABLE IF EXISTS movie"
 
 
     override fun onCreate(db: SQLiteDatabase?) {
@@ -39,7 +41,7 @@ class Helper(
     }
 
     override fun onUpgrade(db: SQLiteDatabase?, oldVersion: Int, newVersion: Int) {
-        db?.execSQL("DROP TABLE IF EXISTS movie")
+        db?.execSQL(SQL_DROP_TABLE_MOVIE_OLD)
         db?.execSQL(SQL_DROP_TABLE_USER)
         db?.execSQL(SQL_DROP_TABLE_FILM)
         db?.execSQL(SQL_DROP_TABLE_TRANSACTION)
