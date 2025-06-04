@@ -25,6 +25,7 @@
 ## 🛠️ Tech Stack
 ![Kotlin](https://img.shields.io/badge/Kotlin-%237F52FF.svg?logo=kotlin&logoColor=white)
 ![SQLite](https://img.shields.io/badge/SQLite-%2307405e.svg?logo=sqlite&logoColor=white)
+
 <br>
 
 ## 🚀 Getting Started
