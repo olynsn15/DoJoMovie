@@ -169,5 +169,11 @@ DoJoMovie/
 
 ## Notes
 ```
+- Developed using Glide : image loading and caching library for Android focused
+
+- Assets used :
+Fonts : Poppins Family (via Google Fonts (https://fonts.google.com))
+Icons : Flaticon & Figma Material Design Pack 
+
 DoJo Movies is a semester-long final group project developed for the Mobile Community Solution LAB course
 ```
